@@ -1,0 +1,70 @@
+<resources>
+
+    <string name="app_name">Captain</string>
+
+    <!-- Menu strings -->
+    <string name="menu_settings">Settings</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_update">Update</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_about">About</string>
+
+    <!-- Strings used for fragment titles -->
+    <string name="title_list">Captain</string>
+    <string name="title_add">New code</string>
+    <string name="title_update">Edit code</string>
+    <string name="title_view">Saved code</string>
+
+    <!-- Strings for Toast messages -->
+    <string name="toast_lockscreen_not_enabled">Lockscreen security not enabled in Settings</string>
+    <string name="toast_fingerprint_permission_not_granted">Fingerprint permission not enabled</string>
+    <string name="toast_fingerprint_not_supported">Fingerprint not supported</string>
+    <string name="toast_authentication_cancelled">Authentication cancelled</string>
+    <string name="toast_authentication_failed">Authentication failed</string>
+    <string name="toast_authentication_success">Successful authentication</string>
+    <string name="toast_menu_settings">Settings : no such thing, do your best</string>
+    <string name="toast_menu_help">Help : no such thing, do your best</string>
+    <string name="toast_menu_about">Johannes Carbonus fecit MMXXIII</string>
+
+    <!-- Authentication prompts -->
+    <string name="prompt_authentication_required">Authentication required</string>
+    <string name="prompt_code_protected_by_fingerprint">This code is protected by fingerprint authentication</string>
+
+    <!-- TextInputLayout hints -->
+    <string name="txt_category">Category</string>
+    <string name="txt_codename">Name</string>
+    <string name="txt_codeval">Code</string>
+    <string name="txt_checkbox_fingerprint">Protected by fingerprint</string>
+    <string name="txt_comments">comments</string>
+    <string name="helper_name">Choose a name for this code</string>
+    <string name="helper_codeval">Enter the code\'s value</string>
+    <string name="helper_category">Choose a category</string>
+    <string name="helper_comments">Optionnal comments</string>
+
+    <!-- Error messages -->
+    <string name="err_noname">No Name value</string>
+    <string name="err_nocodeval">No code value</string>
+    <string name="err_name_already_exists">Name already exists</string>
+    <string name="prompt_cancel">Cancel</string>
+
+
+    <string name="dbid">dbId</string>
+    <string name="rvid">rvId</string>
+    <string name="dbidtxtt">dbId</string>
+    <string name="rvidtxt">rvId</string>
+    <string name="category">category</string>
+    <string name="codename">codename</string>
+    <string name="udate_day">udate day</string>
+    <string name="comments">comments</string>
+
+    <!-- Category items -->
+    <string-array name="categs">
+        <item>Cards</item>
+        <item>Login</item>
+        <item>Work</item>
+        <item>Bank</item>
+        <item>Doors</item>
+        <item>PIN</item>
+        <item>Various</item>
+    </string-array>
+</resources>

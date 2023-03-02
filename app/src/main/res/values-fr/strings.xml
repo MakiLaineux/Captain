@@ -1,0 +1,70 @@
+<resources>
+
+    <string name="app_name">Captain</string>
+
+    <!-- Menu strings -->
+    <string name="menu_settings">Options</string>
+    <string name="menu_save">Enregistrer</string>
+    <string name="menu_update">Modifier</string>
+    <string name="menu_help">Aide</string>
+    <string name="menu_about">A propos</string>
+
+    <!-- Strings used for fragment titles -->
+    <string name="title_list">Memo Plus</string>
+    <string name="title_add">Nouveau code</string>
+    <string name="title_update">Modification</string>
+    <string name="title_view">Visu code</string>
+
+    <!-- Strings for Toast messages -->
+    <string name="toast_lockscreen_not_enabled">Le verrouillage de l\'écran doit être activé</string>
+    <string name="toast_fingerprint_permission_not_granted">Permission Empreinte digitale nécessaire</string>
+    <string name="toast_fingerprint_not_supported">Empreinte digitale non supportée par l\'appareil</string>
+    <string name="toast_authentication_cancelled">Authentification annulée</string>
+    <string name="toast_authentication_failed">Echec de l\'authentification</string>
+    <string name="toast_authentication_success">Authentification réussie</string>
+    <string name="toast_menu_settings">Options : Y en a pas</string>
+    <string name="toast_menu_help">Aide : Y en a pas</string>
+    <string name="toast_menu_about">Johannes Carbonus fecit MMXXIII</string>
+
+    <!-- Authentication prompts -->
+    <string name="prompt_authentication_required">Authentification nécessaire</string>
+    <string name="prompt_code_protected_by_fingerprint">Ce code est protégé par empreinte digitale</string>
+
+    <!-- TextInputLayout hints -->
+    <string name="txt_category">Catégorie</string>
+    <string name="txt_codename">Nom</string>
+    <string name="txt_codeval">Code</string>
+    <string name="txt_checkbox_fingerprint">Protégé par empreinte digitale</string>
+    <string name="txt_comments">Commentaires</string>
+    <string name="helper_name">Entrez un nom pour le code</string>
+    <string name="helper_codeval">Entrez la valeur du code</string>
+    <string name="helper_category">Choisissez une catégorie</string>
+    <string name="helper_comments">Commentaires oprionnels</string>
+
+    <!-- Error messages -->
+    <string name="err_noname">Entrez un nom pour le code</string>
+    <string name="err_nocodeval">Entrez un code</string>
+    <string name="err_name_already_exists">Un code de même nom existe déjà</string>
+    <string name="prompt_cancel">Cancel</string>
+
+
+    <string name="dbid">dbId</string>
+    <string name="rvid">rvId</string>
+    <string name="dbidtxtt">dbId</string>
+    <string name="rvidtxt">rvId</string>
+    <string name="category">category</string>
+    <string name="codename">codename</string>
+    <string name="udate_day">udate day</string>
+    <string name="comments">comments</string>
+
+    <!-- Category items -->
+    <string-array name="categs">
+        <item>CB</item>
+        <item>Login</item>
+        <item>Travail</item>
+        <item>Banque et assurance</item>
+        <item>Digicodes</item>
+        <item>PIN</item>
+        <item>Divers</item>
+    </string-array>
+</resources>
