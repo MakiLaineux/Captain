@@ -23,7 +23,7 @@
         android:id="@+id/VisuFragment"
         android:name="com.technoprimates.captain.ui.VisuFragment"
         android:label="@string/title_view"
-        tools:layout="@layout/code_view">
+        tools:layout="@layout/item_view">
 
         <action
             android:id="@+id/action_VisuFragment_to_EditFragment"
@@ -33,7 +33,7 @@
     <fragment
         android:id="@+id/EditFragment"
         android:name="com.technoprimates.captain.ui.EditFragment"
-        tools:layout="@layout/code_edit">
+        tools:layout="@layout/item_edit">
 
     <action
         android:id="@+id/action_EditFragment_to_ListFragment"

@@ -23,21 +23,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.technoprimates.captain.CodeViewModel;
+import com.technoprimates.captain.ItemViewModel;
 import com.technoprimates.captain.R;
 import com.technoprimates.captain.databinding.FragmentListBinding;
-import com.technoprimates.captain.db.Code;
+import com.technoprimates.captain.db.Item;
 
-public class ListFragment extends Fragment implements CodeListAdapter.CodeActionListener {
+public class ListFragment extends Fragment implements ItemListAdapter.CodeActionListener {
 
     // ViewModel scoped to the Activity
-    private CodeViewModel mViewModel;
+    private ItemViewModel mViewModel;
 
     // binding
     private FragmentListBinding binding;
 
     // Adapter for the RecyclerView
-    private CodeListAdapter adapter;
+    private ItemListAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,13 +75,13 @@ public class ListFragment extends Fragment implements CodeListAdapter.CodeAction
         super.onViewCreated(view, savedInstanceState);
 
         // Creates the ViewModel instance
-        mViewModel = new ViewModelProvider(requireActivity()).get(CodeViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
 
-        // Floating action button for adding a new Code item
+        // Floating action button for adding a new Item item
         binding.fab.setOnClickListener(view1 -> {
-            // Set in the ViewModel the action to process, no db-existing Code required in this case
-            mViewModel.selectActionToProcess(Code.MODE_INSERT);
-            mViewModel.selectCodeToProcess(null);
+            // Set in the ViewModel the action to process, no db-existing Item required in this case
+            mViewModel.selectActionToProcess(Item.MODE_INSERT);
+            mViewModel.selectItemToProcess(null);
 
             // navigate to editFragment
             NavHostFragment.findNavController(ListFragment.this)
@@ -99,7 +99,7 @@ public class ListFragment extends Fragment implements CodeListAdapter.CodeAction
 
     // Observe the LiveData List of Codes
     private void observerSetup() {
-        mViewModel.getAllcodes().observe(getViewLifecycleOwner(),
+        mViewModel.getAllitems().observe(getViewLifecycleOwner(),
                 codes -> {
                     adapter.setCodeList(codes); // update RV
                 });
@@ -107,7 +107,7 @@ public class ListFragment extends Fragment implements CodeListAdapter.CodeAction
 
     //Sets the RecyclerView
     private void recyclerSetup() {
-        adapter = new CodeListAdapter(R.layout.item_code, this);
+        adapter = new ItemListAdapter(R.layout.item_item, this);
         binding.codeRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.codeRecycler.setAdapter(adapter);
 
@@ -131,23 +131,23 @@ public class ListFragment extends Fragment implements CodeListAdapter.CodeAction
     /**
      * {@inheritDoc}
      * <p>This triggers a navigation to the Visualization Fragment.
-     * If the Code is protected by fingerprint, a authentication is performed first.</p>
+     * If the Item is protected by fingerprint, a authentication is performed first.</p>
      */
     @Override
-    public void onCodeClicked(Code code) {
+    public void onCodeClicked(Item item) {
 
-        // Set in the ViewModel the action to process, and the Code to process
-        mViewModel.selectActionToProcess(Code.MODE_VISU);
-        mViewModel.selectCodeToProcess(code);
+        // Set in the ViewModel the action to process, and the Item to process
+        mViewModel.selectActionToProcess(Item.MODE_VISU);
+        mViewModel.selectItemToProcess(item);
 
-        // check if the Code is fingerprint protected
-        if (code.getCodeProtectMode() == Code.FINGERPRINT_PROTECTED) {
+        // check if the Item is fingerprint protected
+        if (item.getItemProtectMode() == Item.FINGERPRINT_PROTECTED) {
 
-            // Code protected : Ask for the user's fingerprint
+            // Item protected : Ask for the user's fingerprint
             BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(getActivity())
                     .setTitle(getString(R.string.app_name))
                     .setSubtitle(getString(R.string.prompt_authentication_required))
-                    .setDescription((getString(R.string.prompt_code_protected_by_fingerprint)))
+                    .setDescription((getString(R.string.prompt_item_protected_by_fingerprint)))
                     .setNegativeButton(getString(R.string.prompt_cancel), requireActivity().getMainExecutor(), (dialog, which) -> Toast.makeText(getActivity(), getString(R.string.toast_authentication_cancelled), Toast.LENGTH_LONG).show())
                     .build();
 
@@ -164,24 +164,24 @@ public class ListFragment extends Fragment implements CodeListAdapter.CodeAction
 
     public void onDeleteCodeRequest(int pos) {
 
-        // delete selected Code
-        Code code = adapter.getCodeAtPos(pos);
-        if (code == null) return;
+        // delete selected Item
+        Item item = adapter.getCodeAtPos(pos);
+        if (item == null) return;
 
-        // Set in the ViewModel the action to process, and the Code to process
-        mViewModel.selectActionToProcess(Code.MODE_DELETE);
-        mViewModel.selectCodeToProcess(code);
-        mViewModel.deleteCode();
+        // Set in the ViewModel the action to process, and the Item to process
+        mViewModel.selectActionToProcess(Item.MODE_DELETE);
+        mViewModel.selectItemToProcess(item);
+        mViewModel.deleteItem();
 
         // show snackbar with undo button
-        Snackbar snackbar = Snackbar.make(binding.codeRecycler, "Code deleted at pos : "+pos, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(binding.codeRecycler, "Item deleted at pos : "+pos, Snackbar.LENGTH_LONG);
         //
         snackbar.setAction("UNDO", view -> {
-            // Set in the ViewModel the action to process, and the Code to process
-            mViewModel.selectActionToProcess(Code.MODE_INSERT);
-            mViewModel.selectCodeToProcess(code);
-            // Re-insert the Code
-            mViewModel.reInsertCode();
+            // Set in the ViewModel the action to process, and the Item to process
+            mViewModel.selectActionToProcess(Item.MODE_INSERT);
+            mViewModel.selectItemToProcess(item);
+            // Re-insert the Item
+            mViewModel.reInsertItem();
         });
         snackbar.show();
     }

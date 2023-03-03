@@ -10,10 +10,10 @@
     <string name="menu_about">A propos</string>
 
     <!-- Strings used for fragment titles -->
-    <string name="title_list">Memo Plus</string>
-    <string name="title_add">Nouveau code</string>
+    <string name="title_list">Captain</string>
+    <string name="title_add">Nouveau item</string>
     <string name="title_update">Modification</string>
-    <string name="title_view">Visu code</string>
+    <string name="title_view">Visu item</string>
 
     <!-- Strings for Toast messages -->
     <string name="toast_lockscreen_not_enabled">Le verrouillage de l\'écran doit être activé</string>
@@ -28,23 +28,23 @@
 
     <!-- Authentication prompts -->
     <string name="prompt_authentication_required">Authentification nécessaire</string>
-    <string name="prompt_code_protected_by_fingerprint">Ce code est protégé par empreinte digitale</string>
+    <string name="prompt_item_protected_by_fingerprint">Ce item est protégé par empreinte digitale</string>
 
     <!-- TextInputLayout hints -->
     <string name="txt_category">Catégorie</string>
-    <string name="txt_codename">Nom</string>
-    <string name="txt_codeval">Code</string>
+    <string name="txt_itemname">Nom</string>
+    <string name="txt_itemval">Code</string>
     <string name="txt_checkbox_fingerprint">Protégé par empreinte digitale</string>
     <string name="txt_comments">Commentaires</string>
-    <string name="helper_name">Entrez un nom pour le code</string>
-    <string name="helper_codeval">Entrez la valeur du code</string>
+    <string name="helper_name">Entrez un nom pour le item</string>
+    <string name="helper_itemval">Entrez la valeur du item</string>
     <string name="helper_category">Choisissez une catégorie</string>
     <string name="helper_comments">Commentaires oprionnels</string>
 
     <!-- Error messages -->
-    <string name="err_noname">Entrez un nom pour le code</string>
-    <string name="err_nocodeval">Entrez un code</string>
-    <string name="err_name_already_exists">Un code de même nom existe déjà</string>
+    <string name="err_noname">Entrez un nom pour le item</string>
+    <string name="err_noitemval">Entrez un item</string>
+    <string name="err_name_already_exists">Un item de même nom existe déjà</string>
     <string name="prompt_cancel">Cancel</string>
 
 
@@ -53,7 +53,7 @@
     <string name="dbidtxtt">dbId</string>
     <string name="rvidtxt">rvId</string>
     <string name="category">category</string>
-    <string name="codename">codename</string>
+    <string name="itemname">codename</string>
     <string name="udate_day">udate day</string>
     <string name="comments">comments</string>
 

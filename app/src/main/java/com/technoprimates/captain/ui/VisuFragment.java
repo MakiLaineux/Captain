@@ -18,22 +18,22 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.technoprimates.captain.CodeViewModel;
+import com.technoprimates.captain.ItemViewModel;
 import com.technoprimates.captain.R;
-import com.technoprimates.captain.databinding.CodeViewBinding;
-import com.technoprimates.captain.db.Code;
+import com.technoprimates.captain.databinding.ItemViewBinding;
+import com.technoprimates.captain.db.Item;
 
 
 public class VisuFragment extends Fragment {
 
     public static final String TAG = "VISUFRAG";
-    private CodeViewBinding binding;
-    private CodeViewModel mViewModel;
+    private ItemViewBinding binding;
+    private ItemViewModel mViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(requireActivity()).get(CodeViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
     }
 
     @Override
@@ -50,8 +50,8 @@ public class VisuFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.action_edit) {
                     // Set in the ViewModel the action to process
-                    // The Code to process is already set in the ViewModel
-                    mViewModel.selectActionToProcess(Code.MODE_UPDATE);
+                    // The Item to process is already set in the ViewModel
+                    mViewModel.selectActionToProcess(Item.MODE_UPDATE);
 
                     // Navigate to EditFragment
                     NavHostFragment.findNavController(VisuFragment.this)
@@ -63,25 +63,25 @@ public class VisuFragment extends Fragment {
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
         // binding
-        binding = CodeViewBinding.inflate(inflater, container, false);
+        binding = ItemViewBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Code code = mViewModel.getCodeToProcess();
-        if (code == null) {
+        Item item = mViewModel.getItemToProcess();
+        if (item == null) {
             Log.e(TAG, "Error : no CurrentCode");
             return;
         }
 
         // fill fields
-        binding.dispCateg.setText(code.getCodeCategory());
-        binding.dispCodename.setText(code.getCodeName());
-        binding.dispCodeval.setText(code.getCodeValue());
-        binding.checkboxFingerprint.setChecked(code.getCodeProtectMode() == Code.FINGERPRINT_PROTECTED);
-        binding.dispComments.setText(code.getCodeComments());
+        binding.dispCateg.setText(item.getItemCategory());
+        binding.dispItemname.setText(item.getItemName());
+        binding.dispItemval.setText(item.getItemValue());
+        binding.checkboxFingerprint.setChecked(item.getItemProtectMode() == Item.FINGERPRINT_PROTECTED);
+        binding.dispComments.setText(item.getItemComments());
         binding.dispComments.setMovementMethod(new ScrollingMovementMethod());
     }
 

@@ -11,9 +11,9 @@
 
     <!-- Strings used for fragment titles -->
     <string name="title_list">Captain</string>
-    <string name="title_add">New code</string>
-    <string name="title_update">Edit code</string>
-    <string name="title_view">Saved code</string>
+    <string name="title_add">New item</string>
+    <string name="title_update">Edit item</string>
+    <string name="title_view">Saved item</string>
 
     <!-- Strings for Toast messages -->
     <string name="toast_lockscreen_not_enabled">Lockscreen security not enabled in Settings</string>
@@ -28,22 +28,22 @@
 
     <!-- Authentication prompts -->
     <string name="prompt_authentication_required">Authentication required</string>
-    <string name="prompt_code_protected_by_fingerprint">This code is protected by fingerprint authentication</string>
+    <string name="prompt_item_protected_by_fingerprint">This item is protected by fingerprint authentication</string>
 
     <!-- TextInputLayout hints -->
     <string name="txt_category">Category</string>
-    <string name="txt_codename">Name</string>
-    <string name="txt_codeval">Code</string>
+    <string name="txt_itemname">Name</string>
+    <string name="txt_itemval">Code</string>
     <string name="txt_checkbox_fingerprint">Protected by fingerprint</string>
     <string name="txt_comments">comments</string>
-    <string name="helper_name">Choose a name for this code</string>
-    <string name="helper_codeval">Enter the code\'s value</string>
+    <string name="helper_name">Choose a name for this item</string>
+    <string name="helper_itemval">Enter the item\'s value</string>
     <string name="helper_category">Choose a category</string>
     <string name="helper_comments">Optionnal comments</string>
 
     <!-- Error messages -->
     <string name="err_noname">No Name value</string>
-    <string name="err_nocodeval">No code value</string>
+    <string name="err_noitemval">No item value</string>
     <string name="err_name_already_exists">Name already exists</string>
     <string name="prompt_cancel">Cancel</string>
 
@@ -53,7 +53,7 @@
     <string name="dbidtxtt">dbId</string>
     <string name="rvidtxt">rvId</string>
     <string name="category">category</string>
-    <string name="codename">codename</string>
+    <string name="itemname">codename</string>
     <string name="udate_day">udate day</string>
     <string name="comments">comments</string>
 
