@@ -6,17 +6,17 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Item.class}, version = 1)
-public abstract class ItemRoomDatabase extends RoomDatabase {
-    public abstract ItemDao itemDao();
-    private static volatile ItemRoomDatabase INSTANCE;
+@Database(entities = {Stuck.class}, version = 1)
+public abstract class StuckRoomDatabase extends RoomDatabase {
+    public abstract StuckDao stuckDao();
+    private static volatile StuckRoomDatabase INSTANCE;
 
-    static ItemRoomDatabase getDatabase(final Context context) {
+    static StuckRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (ItemRoomDatabase.class) {
+            synchronized (StuckRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    ItemRoomDatabase.class, "item-database")
+                                    StuckRoomDatabase.class, "stuck-database")
                             .build();
                 }
             }

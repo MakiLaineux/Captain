@@ -23,21 +23,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.technoprimates.captain.ItemViewModel;
+import com.technoprimates.captain.StuckViewModel;
 import com.technoprimates.captain.R;
 import com.technoprimates.captain.databinding.FragmentListBinding;
-import com.technoprimates.captain.db.Item;
+import com.technoprimates.captain.db.Stuck;
 
-public class ListFragment extends Fragment implements ItemListAdapter.CodeActionListener {
+public class ListFragment extends Fragment implements StuckListAdapter.StuckActionListener {
 
     // ViewModel scoped to the Activity
-    private ItemViewModel mViewModel;
+    private StuckViewModel mViewModel;
 
     // binding
     private FragmentListBinding binding;
 
     // Adapter for the RecyclerView
-    private ItemListAdapter adapter;
+    private StuckListAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,13 +75,13 @@ public class ListFragment extends Fragment implements ItemListAdapter.CodeAction
         super.onViewCreated(view, savedInstanceState);
 
         // Creates the ViewModel instance
-        mViewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(StuckViewModel.class);
 
-        // Floating action button for adding a new Item item
+        // Floating action button for adding a new Stuck item
         binding.fab.setOnClickListener(view1 -> {
-            // Set in the ViewModel the action to process, no db-existing Item required in this case
-            mViewModel.selectActionToProcess(Item.MODE_INSERT);
-            mViewModel.selectItemToProcess(null);
+            // Set in the ViewModel the action to process, no db-existing Stuck required in this case
+            mViewModel.selectActionToProcess(Stuck.MODE_INSERT);
+            mViewModel.selectStuckToProcess(null);
 
             // navigate to editFragment
             NavHostFragment.findNavController(ListFragment.this)
@@ -99,17 +99,17 @@ public class ListFragment extends Fragment implements ItemListAdapter.CodeAction
 
     // Observe the LiveData List of Codes
     private void observerSetup() {
-        mViewModel.getAllitems().observe(getViewLifecycleOwner(),
-                codes -> {
-                    adapter.setCodeList(codes); // update RV
+        mViewModel.getAllstucks().observe(getViewLifecycleOwner(),
+                stucks -> {
+                    adapter.setStuckList(stucks); // update RV
                 });
     }
 
     //Sets the RecyclerView
     private void recyclerSetup() {
-        adapter = new ItemListAdapter(R.layout.item_item, this);
-        binding.codeRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.codeRecycler.setAdapter(adapter);
+        adapter = new StuckListAdapter(R.layout.stuck_item, this);
+        binding.stuckRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.stuckRecycler.setAdapter(adapter);
 
         // swipe detection
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
@@ -120,30 +120,30 @@ public class ListFragment extends Fragment implements ItemListAdapter.CodeAction
 
             @Override //swipe
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                onDeleteCodeRequest(viewHolder.getBindingAdapterPosition());
+                onDeleteStuckRequest(viewHolder.getBindingAdapterPosition());
             }
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(binding.codeRecycler);
+        itemTouchHelper.attachToRecyclerView(binding.stuckRecycler);
     }
 
     /**
      * {@inheritDoc}
      * <p>This triggers a navigation to the Visualization Fragment.
-     * If the Item is protected by fingerprint, a authentication is performed first.</p>
+     * If the Stuck is protected by fingerprint, a authentication is performed first.</p>
      */
     @Override
-    public void onCodeClicked(Item item) {
+    public void onStuckClicked(Stuck stuck) {
 
-        // Set in the ViewModel the action to process, and the Item to process
-        mViewModel.selectActionToProcess(Item.MODE_VISU);
-        mViewModel.selectItemToProcess(item);
+        // Set in the ViewModel the action to process, and the Stuck to process
+        mViewModel.selectActionToProcess(Stuck.MODE_UPDATE);
+        mViewModel.selectStuckToProcess(stuck);
 
-        // check if the Item is fingerprint protected
-        if (item.getItemProtectMode() == Item.FINGERPRINT_PROTECTED) {
+        // check if the Stuck is fingerprint protected
+        if (stuck.getProtectMode() == Stuck.FINGERPRINT_PROTECTED) {
 
-            // Item protected : Ask for the user's fingerprint
+            // Stuck protected : Ask for the user's fingerprint
             BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(getActivity())
                     .setTitle(getString(R.string.app_name))
                     .setSubtitle(getString(R.string.prompt_authentication_required))
@@ -157,31 +157,31 @@ public class ListFragment extends Fragment implements ItemListAdapter.CodeAction
         } else {
             // No authentication required : navigate to visualization of currentCode
             NavHostFragment.findNavController(ListFragment.this)
-                    .navigate(R.id.action_ListFragment_to_VisuFragment);
+                    .navigate(R.id.action_ListFragment_to_EditFragment);
         }
     }
 
 
-    public void onDeleteCodeRequest(int pos) {
+    public void onDeleteStuckRequest(int pos) {
 
-        // delete selected Item
-        Item item = adapter.getCodeAtPos(pos);
-        if (item == null) return;
+        // delete selected Stuck
+        Stuck stuck = adapter.getStuckAtPos(pos);
+        if (stuck == null) return;
 
-        // Set in the ViewModel the action to process, and the Item to process
-        mViewModel.selectActionToProcess(Item.MODE_DELETE);
-        mViewModel.selectItemToProcess(item);
-        mViewModel.deleteItem();
+        // Set in the ViewModel the action to process, and the Stuck to process
+        mViewModel.selectActionToProcess(Stuck.MODE_DELETE);
+        mViewModel.selectStuckToProcess(stuck);
+        mViewModel.deleteStuck();
 
         // show snackbar with undo button
-        Snackbar snackbar = Snackbar.make(binding.codeRecycler, "Item deleted at pos : "+pos, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(binding.stuckRecycler, "Stuck deleted at pos : "+pos, Snackbar.LENGTH_LONG);
         //
         snackbar.setAction("UNDO", view -> {
-            // Set in the ViewModel the action to process, and the Item to process
-            mViewModel.selectActionToProcess(Item.MODE_INSERT);
-            mViewModel.selectItemToProcess(item);
-            // Re-insert the Item
-            mViewModel.reInsertItem();
+            // Set in the ViewModel the action to process, and the Stuck to process
+            mViewModel.selectActionToProcess(Stuck.MODE_INSERT);
+            mViewModel.selectStuckToProcess(stuck);
+            // Re-insert the Stuck
+            mViewModel.reInsertStuck();
         });
         snackbar.show();
     }
@@ -209,7 +209,7 @@ public class ListFragment extends Fragment implements ItemListAdapter.CodeAction
 
                 // Navigate to the visualization fragment
                 NavHostFragment.findNavController(ListFragment.this)
-                        .navigate(R.id.action_ListFragment_to_VisuFragment);
+                        .navigate(R.id.action_ListFragment_to_EditFragment);
             }
 
             @Override
@@ -232,7 +232,7 @@ public class ListFragment extends Fragment implements ItemListAdapter.CodeAction
              */
             @Override
             public void onCancel() {
-                Snackbar snackbar = Snackbar.make(binding.codeRecycler, "Canceled via signal", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(binding.stuckRecycler, "Canceled via signal", Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
         });

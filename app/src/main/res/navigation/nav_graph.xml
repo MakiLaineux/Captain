@@ -12,28 +12,14 @@
         tools:layout="@layout/fragment_list">
 
         <action
-            android:id="@+id/action_ListFragment_to_VisuFragment"
-            app:destination="@id/VisuFragment"/>
-        <action
             android:id="@+id/action_ListFragment_to_EditFragment"
-            app:destination="@id/EditFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/VisuFragment"
-        android:name="com.technoprimates.captain.ui.VisuFragment"
-        android:label="@string/title_view"
-        tools:layout="@layout/item_view">
-
-        <action
-            android:id="@+id/action_VisuFragment_to_EditFragment"
             app:destination="@id/EditFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/EditFragment"
         android:name="com.technoprimates.captain.ui.EditFragment"
-        tools:layout="@layout/item_edit">
+        tools:layout="@layout/stuck_edit">
 
     <action
         android:id="@+id/action_EditFragment_to_ListFragment"

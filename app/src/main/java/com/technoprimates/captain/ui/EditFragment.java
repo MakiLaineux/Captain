@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,10 +20,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.technoprimates.captain.ItemViewModel;
+import com.technoprimates.captain.StuckViewModel;
 import com.technoprimates.captain.R;
-import com.technoprimates.captain.databinding.ItemEditBinding;
-import com.technoprimates.captain.db.Item;
+import com.technoprimates.captain.databinding.StuckEditBinding;
+import com.technoprimates.captain.db.Stuck;
 
 import java.util.Objects;
 
@@ -33,10 +32,10 @@ public class EditFragment extends Fragment {
     public static final String TAG = "EDITFRAG";
 
     //binding
-    private ItemEditBinding binding;
+    private StuckEditBinding binding;
 
     // ViewModel scoped to the Activity
-    private ItemViewModel mViewModel;
+    private StuckViewModel mViewModel;
 
     // Action to process (INSERT, UPDATE)
     private int mAction;
@@ -62,7 +61,7 @@ public class EditFragment extends Fragment {
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
         // binding
-        binding = ItemEditBinding.inflate(inflater, container, false);
+        binding = StuckEditBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -70,7 +69,7 @@ public class EditFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(StuckViewModel.class);
         mAction = mViewModel.getActionMode();
     }
 
@@ -79,60 +78,49 @@ public class EditFragment extends Fragment {
 
         switch (mAction) {
 
-            case Item.MODE_UPDATE:
-                // update an existing Item available in the ViewModel
-                // fill the fields with existing Item
-                setString(binding.contentItemname, mViewModel.getItemToProcess().getItemName());
-                setString(binding.contentItemval, mViewModel.getItemToProcess().getItemValue());
-                setString(binding.contentCategory, mViewModel.getItemToProcess().getItemCategory());
-                setString(binding.contentComments, mViewModel.getItemToProcess().getItemComments());
-                binding.checkboxFingerprint.setChecked((mViewModel.getItemToProcess().getItemProtectMode()) == Item.FINGERPRINT_PROTECTED) ;
+            case Stuck.MODE_UPDATE:
+                // update an existing Stuck available in the ViewModel
+                // fill the fields with existing Stuck
+                setString(binding.stuckName, mViewModel.getStuckToProcess().getName());
+                binding.checkboxFingerprint.setChecked((mViewModel.getStuckToProcess().getProtectMode()) == Stuck.FINGERPRINT_PROTECTED) ;
+
+                // unpacking boolean fields
+                char bools[] = new char[5];
+                mViewModel.getStuckToProcess().getBoolFields().getChars(0,4, bools, 0);
+                binding.ckbField1.setChecked(bools[0] == '1') ;
+                binding.ckbField2.setChecked(bools[1] == '1') ;
+                binding.ckbField3.setChecked(bools[2] == '1') ;
+                binding.ckbField4.setChecked(bools[3] == '1') ;
                 // Set the fragment title
                 Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(R.string.title_update);
                 break;
 
-            case Item.MODE_INSERT:
-                // insert a new Item : start with empty fields
-                setString(binding.contentItemname, "");
-                setString(binding.contentItemval, "");
-                setString(binding.contentCategory, "");
-                setString(binding.contentComments, "");
+            case Stuck.MODE_INSERT:
+                // insert a new Stuck : start with empty fields
+                setString(binding.stuckName, "");
                 binding.checkboxFingerprint.setChecked(false);
+                binding.ckbField1.setChecked(false);
+                binding.ckbField2.setChecked(false);
+                binding.ckbField3.setChecked(false);
+                binding.ckbField4.setChecked(false);
                 // Set the fragment title
                 Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(R.string.title_add);
         }
 
         // start with focus on first input
-        binding.contentItemname.requestFocus();
+        binding.stuckName.requestFocus();
 
-        // set dropdown list for categories
-        String[] categs = getResources().getStringArray(R.array.categs);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.categ_dropdown_item, categs);
-        binding.autoCompleteTextView.setAdapter(arrayAdapter);
 
         // listeners, triggered when losing the focus, for clearing a previous "empty field" error message
-        binding.inputItemname.setOnFocusChangeListener((v, hasFocus) -> {
+        binding.stuckName.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 // lost the focus, there may be an error msg to clear
-                if (binding.contentItemname.getError() != null) {
+                if (binding.stuckName.getError() != null) {
                     // there is currently an error msg, check if it is to be cleared
-                    if ((binding.contentItemname.getEditText() != null)
-                            && (!TextUtils.isEmpty(binding.contentItemname.getEditText().getText().toString()))) {
-                        // Item name not empty, the error message can be cleared
-                        binding.contentItemname.setError(null);
-                    }
-                }
-            }
-        });
-        binding.inputItemval.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                // lost the focus, there may be an error msg to clear
-                if (binding.contentItemval.getError() != null) {
-                    // there is currently an error msg, check if it is to be cleared
-                    if ((binding.contentItemval.getEditText() != null)
-                        && (!TextUtils.isEmpty(binding.contentItemval.getEditText().getText().toString()))) {
-                        // Item name not empty, the error message can be cleared
-                        binding.contentItemval.setError(null);
+                    if ((binding.stuckName.getEditText() != null)
+                            && (!TextUtils.isEmpty(binding.stuckName.getEditText().getText().toString()))) {
+                        // Stuck name not empty, the error message can be cleared
+                        binding.stuckName.setError(null);
                     }
                 }
             }
@@ -144,70 +132,66 @@ public class EditFragment extends Fragment {
     /**
      * Gets user inputs and perform basic checks.
      *
-     * @return A Item object containing user input
+     * @return A Stuck object containing user input
      */
-    private Item getUserInput() {
+    private Stuck getUserInput() {
         // get user inputs
-        String name = getString(binding.contentItemname);
-        String value = getString(binding.contentItemval);
-        String categ = getString(binding.contentCategory);
-        String comments = getString(binding.contentComments);
-        int protectMode = binding.checkboxFingerprint.isChecked() ? Item.FINGERPRINT_PROTECTED : Item.NOT_FINGERPRINT_PROTECTED;
+        String name = getString(binding.stuckName);
+        int protectMode = binding.checkboxFingerprint.isChecked() ? Stuck.FINGERPRINT_PROTECTED : Stuck.NOT_FINGERPRINT_PROTECTED;
 
-        // check name, value
+        // pack boolean values
+        StringBuilder sb = new StringBuilder();
+        sb.append(binding.ckbField1.isChecked() ? '1' : '0');
+        sb.append(binding.ckbField2.isChecked() ? '1' : '0');
+        sb.append(binding.ckbField3.isChecked() ? '1' : '0');
+        sb.append(binding.ckbField4.isChecked() ? '1' : '0');
+        String boolFields = sb.toString();
+
+        // check name
         if (name.equals("")) {
-            binding.contentItemname.setError(getString(R.string.err_noname));
-            binding.contentItemname.requestFocus();
+            binding.stuckName.setError(getString(R.string.err_noname));
+            binding.stuckName.requestFocus();
             return null;
         } else {
-            binding.contentItemname.setError(null);
-            binding.contentItemname.setHelperTextEnabled(false);
+            binding.stuckName.setError(null);
+            binding.stuckName.setHelperTextEnabled(false);
         }
 
-        if (value.equals("")) {
-            binding.contentItemval.setError(getString(R.string.err_noitemval));
-            binding.contentItemval.requestFocus();
-            return null;
-        } else {
-            binding.contentItemval.setError(null);
-            binding.contentItemval.setHelperTextEnabled(false);
-        }
-
-        // checks ok, build Item object with user input
-        return (new Item(name, value, categ, comments, protectMode));
+        // checks ok, build Stuck object with user input
+        return (new Stuck(name, protectMode, boolFields));
     }
 
     private void onSaveClicked () {
-        Item item = getUserInput();
+        Stuck item = getUserInput();
 
         // perform checks via ViewModel and handle errors
-        switch (mViewModel.checkItemBusinessLogic(item, mAction)) {
-            // Item must be not null and item name must not be empty
-            case ItemViewModel.NO_ITEM:
-            case ItemViewModel.NO_ITEMNAME:
+        switch (mViewModel.checkStuckBusinessLogic(item, mAction)) {
+            // Stuck must be not null and item name must not be empty
+            case StuckViewModel.NO_STUCK:
+            case StuckViewModel.NO_STUCK_NAME:
                 return;
             // Cannot overwrite existing item
-            case ItemViewModel.ITEMNAME_ALREADY_EXISTS:
-                binding.contentItemname.setError(getString(R.string.err_name_already_exists));
-                binding.contentItemname.requestFocus();
+            case StuckViewModel.STUCK_NAME_ALREADY_EXISTS:
+                binding.stuckName.setError(getString(R.string.err_name_already_exists));
+                binding.stuckName.requestFocus();
                 return;
-            case ItemViewModel.ITEM_OK:
+            case StuckViewModel.STUCK_OK:
                 break;
             default:
-                Log.e(TAG, "Checking item : unexpected return value");
+                Log.e(TAG, "Checking stuck : unexpected return value");
         }
 
-        if (mAction == Item.MODE_INSERT) {
-            // set Insertion mode and Item to process in the ViewModel
-            mViewModel.selectActionToProcess(Item.MODE_INSERT);
-            mViewModel.selectItemToProcess(item);
-            mViewModel.insertItem();
+        if (mAction == Stuck.MODE_INSERT) {
+            // set Insertion mode and Stuck to process in the ViewModel
+            mViewModel.selectActionToProcess(Stuck.MODE_INSERT);
+            mViewModel.selectStuckToProcess(item);
+            mViewModel.insertStuck();
 
         } else {
-            mViewModel.selectActionToProcess(Item.MODE_UPDATE);
+            mViewModel.selectActionToProcess(Stuck.MODE_UPDATE);
             assert item != null;
-            mViewModel.fillItemToProcess(item);
-            mViewModel.updateItem();
+            mViewModel.fillStuckToProcess(item);
+            mViewModel.updateStuck();
         }
 
         // save completed, return to the list fragment

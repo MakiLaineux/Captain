@@ -56,6 +56,19 @@
     <string name="itemname">codename</string>
     <string name="udate_day">udate day</string>
     <string name="comments">comments</string>
+    <string name="txt_checkbox_field1">Booléen 1</string>
+    <string name="txt_checkbox_field2">Booléen 2</string>
+    <string name="txt_checkbox_field3">Booléen 3</string>
+    <string name="txt_checkbox_field4">Booléen 4</string>
+    <string name="stuckname">stuckname</string>
+    <string name="stuckid">stuckId</string>
+    <string name="ct1">input stuck</string>
+    <string name="ct2">kbox fingerprint one</string>
+    <string name="ct3">kbox field two</string>
+    <string name="ct4">kbox field three</string>
+    <string name="ct5">kbox field four</string>
+    <string name="cd6">kbox field five</string>
+
 
     <!-- Category items -->
     <string-array name="categs">
