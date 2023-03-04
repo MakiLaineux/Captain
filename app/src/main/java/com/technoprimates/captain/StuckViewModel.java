@@ -67,7 +67,6 @@ public class StuckViewModel extends AndroidViewModel {
     /**
      * Set the next operation to perform
      * <p>Possible values for the parameters are :</p>
-     * <li>Stuck.MODE_VISU, with Stuck to display </li>
      * <li>Stuck.MODE_UPDATE, with new content of the Stuck to update</li>
      * <li>Stuck.MODE_INSERT, with  <code>null</code></li>
      * <li>Stuck.MODE_DELETE, with Stuck to delete</li>

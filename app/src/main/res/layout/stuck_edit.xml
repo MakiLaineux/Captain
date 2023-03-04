@@ -24,36 +24,12 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_stuck_name"
-            android:contentDescription="@string/app_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
             tools:ignore="VisualLintTextFieldSize" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-
-    <!-- Fingerprint checkbox -->
-    <TextView
-        android:id="@+id/txt_checkbox_fingerprint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/txt_checkbox_fingerprint"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stuck_name" />
-
-    <CheckBox
-        android:id="@+id/checkbox_fingerprint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="17dp"
-        android:checked="false"
-        android:contentDescription="@string/ct2"
-        app:layout_constraintStart_toEndOf="@id/txt_checkbox_fingerprint"
-        app:layout_constraintTop_toBottomOf="@id/stuck_name" />
 
     <!-- Boolean Fields checkboxes -->
     <TextView
@@ -65,7 +41,7 @@
         android:text="@string/txt_checkbox_field1"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_checkbox_fingerprint" />
+        app:layout_constraintTop_toBottomOf="@id/stuck_name" />
 
     <CheckBox
         android:id="@+id/ckb_field1"
@@ -76,7 +52,7 @@
         android:checked="false"
         android:contentDescription="@string/ct3"
         app:layout_constraintStart_toEndOf="@id/txt_field1"
-        app:layout_constraintTop_toBottomOf="@id/txt_checkbox_fingerprint" />
+        app:layout_constraintTop_toBottomOf="@id/stuck_name" />
 
 
     <TextView
@@ -144,5 +120,12 @@
         android:contentDescription="@string/cd6"
         app:layout_constraintStart_toEndOf="@id/txt_field4"
         app:layout_constraintTop_toBottomOf="@id/txt_field3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

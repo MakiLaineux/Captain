@@ -12,21 +12,11 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "stucks")
 public class Stuck {
 
-    // Field boolean values
-    public static final int FALSE = 0;
-    public static final int TRUE = 1;
-    public static final int INVALID_BOOLEAN_VALUE = 2;
-    public static final int INVALID_FIELD_NUMBER = 3;
-
     // Action modes
-    public static final int MODE_VISU = 101;
     public static final int MODE_UPDATE = 102;
     public static final int MODE_INSERT = 103;
     public static final int MODE_DELETE = 104;
 
-    // Fingerprint modes
-    public static final int FINGERPRINT_PROTECTED = 201;
-    public static final int NOT_FINGERPRINT_PROTECTED = 202;
 
     /* The internal database id. */
     @PrimaryKey(autoGenerate = true)
@@ -41,10 +31,6 @@ public class Stuck {
     @ColumnInfo(name="sUpdateDay")
     private String updateDay;
 
-    /* An int representing the fingerprint protection mode */
-    @ColumnInfo(name="sProtectMode")
-    private int protectMode;
-
     /* An int representing a boolean field */
     @ColumnInfo(name="sBoolFields")
     private String boolFields;
@@ -57,14 +43,12 @@ public class Stuck {
     /**
     Constructor to manually build a <code>Stuck</code>.
      * @param name      A name used to retrieve the {@code Stuck}.
-     * @param protectMode  The fingerprint protection mode, {@code FINGERPRINT_PROTECTED} or {@code NOT_FINGERPRINT_PROTECTED}
      * @param boolFields   A string with 1s and 0s representing boolean values
      */
-    public Stuck(String name, int protectMode, String boolFields) {
+    public Stuck(String name, String boolFields) {
         this.id = 0;
         this.name = name;
         this.updateDay = "";
-        this.protectMode = protectMode;
         this.boolFields = boolFields;
     }
 
@@ -74,7 +58,6 @@ public class Stuck {
      */
     public void setUserProvidedFields(@NonNull Stuck userProvidedStuck) {
         this.name = userProvidedStuck.name;
-        this.protectMode = userProvidedStuck.protectMode;
         this.boolFields = userProvidedStuck.boolFields;
     }
 
@@ -92,13 +75,6 @@ public class Stuck {
      * @return  The day the <code>Stuck</code> was last updated, in string format dd-MM-yyyy
      */
     public String getUpdateDay() {return this.updateDay;}
-
-    /**
-     * @return  The The fingerprint protection mode, may be {@code FINGERPRINT_PROTECTED} or {@code NOT_FINGERPRINT_PROTECTED}
-     */
-    public int getProtectMode() {return this.protectMode;}
-
-
 
     /**
      * Sets the database Id. This method is meant to be called only by room Dao implementations

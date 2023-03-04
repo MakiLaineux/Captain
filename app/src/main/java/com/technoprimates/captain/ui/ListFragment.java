@@ -131,7 +131,6 @@ public class ListFragment extends Fragment implements StuckListAdapter.StuckActi
     /**
      * {@inheritDoc}
      * <p>This triggers a navigation to the Visualization Fragment.
-     * If the Stuck is protected by fingerprint, a authentication is performed first.</p>
      */
     @Override
     public void onStuckClicked(Stuck stuck) {
@@ -140,25 +139,8 @@ public class ListFragment extends Fragment implements StuckListAdapter.StuckActi
         mViewModel.selectActionToProcess(Stuck.MODE_UPDATE);
         mViewModel.selectStuckToProcess(stuck);
 
-        // check if the Stuck is fingerprint protected
-        if (stuck.getProtectMode() == Stuck.FINGERPRINT_PROTECTED) {
-
-            // Stuck protected : Ask for the user's fingerprint
-            BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(getActivity())
-                    .setTitle(getString(R.string.app_name))
-                    .setSubtitle(getString(R.string.prompt_authentication_required))
-                    .setDescription((getString(R.string.prompt_item_protected_by_fingerprint)))
-                    .setNegativeButton(getString(R.string.prompt_cancel), requireActivity().getMainExecutor(), (dialog, which) -> Toast.makeText(getActivity(), getString(R.string.toast_authentication_cancelled), Toast.LENGTH_LONG).show())
-                    .build();
-
-            // launch authentication : if successfull, the callback will launch the navigation to the visu fragment
-            biometricPrompt.authenticate(getCancellationSignal(), requireActivity().getMainExecutor(), getAuthenticationCallback());
-
-        } else {
-            // No authentication required : navigate to visualization of currentCode
-            NavHostFragment.findNavController(ListFragment.this)
-                    .navigate(R.id.action_ListFragment_to_EditFragment);
-        }
+        NavHostFragment.findNavController(ListFragment.this)
+                .navigate(R.id.action_ListFragment_to_EditFragment);
     }
 
 

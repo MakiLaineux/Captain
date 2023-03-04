@@ -29,7 +29,7 @@ import java.util.Objects;
 
 public class EditFragment extends Fragment {
 
-    public static final String TAG = "EDITFRAG";
+    public static final String TAG = "EDIT FRAG";
 
     //binding
     private StuckEditBinding binding;
@@ -82,15 +82,14 @@ public class EditFragment extends Fragment {
                 // update an existing Stuck available in the ViewModel
                 // fill the fields with existing Stuck
                 setString(binding.stuckName, mViewModel.getStuckToProcess().getName());
-                binding.checkboxFingerprint.setChecked((mViewModel.getStuckToProcess().getProtectMode()) == Stuck.FINGERPRINT_PROTECTED) ;
 
                 // unpacking boolean fields
-                char bools[] = new char[5];
-                mViewModel.getStuckToProcess().getBoolFields().getChars(0,4, bools, 0);
-                binding.ckbField1.setChecked(bools[0] == '1') ;
-                binding.ckbField2.setChecked(bools[1] == '1') ;
-                binding.ckbField3.setChecked(bools[2] == '1') ;
-                binding.ckbField4.setChecked(bools[3] == '1') ;
+                char[] boolFields = new char[5];
+                mViewModel.getStuckToProcess().getBoolFields().getChars(0,4, boolFields, 0);
+                binding.ckbField1.setChecked(boolFields[0] == '1') ;
+                binding.ckbField2.setChecked(boolFields[1] == '1') ;
+                binding.ckbField3.setChecked(boolFields[2] == '1') ;
+                binding.ckbField4.setChecked(boolFields[3] == '1') ;
                 // Set the fragment title
                 Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(R.string.title_update);
                 break;
@@ -98,7 +97,6 @@ public class EditFragment extends Fragment {
             case Stuck.MODE_INSERT:
                 // insert a new Stuck : start with empty fields
                 setString(binding.stuckName, "");
-                binding.checkboxFingerprint.setChecked(false);
                 binding.ckbField1.setChecked(false);
                 binding.ckbField2.setChecked(false);
                 binding.ckbField3.setChecked(false);
@@ -137,7 +135,6 @@ public class EditFragment extends Fragment {
     private Stuck getUserInput() {
         // get user inputs
         String name = getString(binding.stuckName);
-        int protectMode = binding.checkboxFingerprint.isChecked() ? Stuck.FINGERPRINT_PROTECTED : Stuck.NOT_FINGERPRINT_PROTECTED;
 
         // pack boolean values
         StringBuilder sb = new StringBuilder();
@@ -158,7 +155,7 @@ public class EditFragment extends Fragment {
         }
 
         // checks ok, build Stuck object with user input
-        return (new Stuck(name, protectMode, boolFields));
+        return (new Stuck(name, boolFields));
     }
 
     private void onSaveClicked () {
