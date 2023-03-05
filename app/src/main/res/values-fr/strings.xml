@@ -69,15 +69,29 @@
     <string name="ct5">kbox field four</string>
     <string name="cd6">kbox field five</string>
 
+    <!-- Profiling -->
+    <string name="nature">Cible</string>
+    <string name="nature1">Homme</string>
+    <string name="nature2">Femme</string>
+    <string name="nature3">Enfant</string>
+    <string name="styles">Style</string>
+    <string name="styles1">D\ésuet</string>
+    <string name="styles2">Ordinaire</string>
+    <string name="styles3">Vulgaire</string>
+    <string name="criteria">Atteintes</string>
+    <string name="criteria1">Physique</string>
+    <string name="criteria2">Capacit\és</string>
+    <string name="criteria3">Vie sexuelle</string>
+    <string name="criteria4">Ethnique</string>
+    <string name="criteria5">Vices</string>
+    <string name="criteria6">Animalit\é</string>
+    <string name="criteria7">Divers</string>
+    <string name="message_statement_empty">Le texte doit contenir au moins une lettre - Op\ération annul\ée</string>
+    <string name="message_statement_already_exists">Le texte existe d\éj\à - Op\ération annul\ée</string>
+    <string name="save_settings">Save settings</string>
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="profile">Profilage</string>
+    <string name="list">Liste</string>
 
-    <!-- Category items -->
-    <string-array name="categs">
-        <item>CB</item>
-        <item>Login</item>
-        <item>Travail</item>
-        <item>Banque et assurance</item>
-        <item>Digicodes</item>
-        <item>PIN</item>
-        <item>Divers</item>
-    </string-array>
 </resources>

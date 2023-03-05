@@ -3,7 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/ListFragment">
+    app:startDestination="@id/HomeFragment">
+
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.technoprimates.captain.ui.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_HomeFragment_to_ProfileFragment"
+            app:destination="@id/ProfileFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_ListFragment"
+            app:destination="@id/ListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.technoprimates.captain.ui.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_ProfileFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/ListFragment"
@@ -21,9 +45,9 @@
         android:name="com.technoprimates.captain.ui.EditFragment"
         tools:layout="@layout/stuck_edit">
 
-    <action
-        android:id="@+id/action_EditFragment_to_ListFragment"
-        app:destination="@id/ListFragment" />
+        <action
+            android:id="@+id/action_EditFragment_to_ListFragment"
+            app:destination="@id/ListFragment" />
     </fragment>
 
 </navigation>
