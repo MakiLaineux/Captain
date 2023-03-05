@@ -180,6 +180,8 @@ public class StuckViewModel extends AndroidViewModel {
                 return STUCK_NAME_ALREADY_EXISTS;
             }
 
+        //TODO add compatibility checks
+
         // All checks completed
         return STUCK_OK;
     }

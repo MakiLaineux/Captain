@@ -20,7 +20,7 @@ No view binding for this fragment, as checkboxes are retrieved via findViewById 
  */
 public class ProfileFragment extends Fragment {
 
-    // UI fields
+    // UI checkboxes
     private final CheckBox[] mProfileCheckBox = new CheckBox[Profile.NB_CHECKBOX];
 
     @Override
@@ -28,10 +28,11 @@ public class ProfileFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        // no binding
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
-    @SuppressWarnings("DiscouragedApi")
+    @SuppressWarnings({"DiscouragedApi", "ConstantConditions"})
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -54,10 +55,13 @@ public class ProfileFragment extends Fragment {
         getView().findViewById(R.id.button_second).setOnClickListener(view1 -> onSaveClicked());
     }
 
+/* uncomment if binding
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        binding = null;
     }
+ */
 
     private void onSaveClicked () {
 
@@ -76,6 +80,6 @@ public class ProfileFragment extends Fragment {
         editor.apply();
 
         NavHostFragment.findNavController(ProfileFragment.this)
-                .navigate(R.id.action_ProfileFragment_to_HomeFragment);
+                .navigateUp();
     }
 }
