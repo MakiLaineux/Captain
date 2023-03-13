@@ -15,35 +15,35 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/stuck_id"
+            android:id="@+id/stueck_id"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
-            android:text="@string/stuckid"
+            android:text="@string/stueckid"
             android:textColor="?colorOnPrimary"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/stuck_name"
+            app:layout_constraintEnd_toStartOf="@+id/stueck_name"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/stuck_name"
+            android:id="@+id/stueck_name"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
             android:gravity="center_vertical"
-            android:text="@string/stuckname"
+            android:text="@string/stueckname"
             android:textColor="?colorOnPrimary"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/stuck_update_day"
+            app:layout_constraintEnd_toStartOf="@+id/stueck_update_day"
             app:layout_constraintHorizontal_weight="3"
-            app:layout_constraintStart_toEndOf="@id/stuck_id"
+            app:layout_constraintStart_toEndOf="@id/stueck_id"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/stuck_update_day"
+            android:id="@+id/stueck_update_day"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:ellipsize="end"
@@ -54,7 +54,7 @@
             android:textColor="?colorOnPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/stuck_name"
+            app:layout_constraintStart_toEndOf="@id/stueck_name"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

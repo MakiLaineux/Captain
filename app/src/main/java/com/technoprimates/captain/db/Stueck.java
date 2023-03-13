@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey;
 /**
  * This class represents an item, stored in a room database.
  */
-@Entity(tableName = "stucks")
-public class Stuck {
+@Entity(tableName = "stuecks")
+public class Stueck {
 
     // Action modes
     public static final int MODE_UPDATE = 102;
@@ -23,7 +23,7 @@ public class Stuck {
     @ColumnInfo(name="sId")
     private int id;
 
-    /* A name used to retrieve the {@code Stuck}. */
+    /* A name used to retrieve the {@code Stueck}. */
     @ColumnInfo(name="sName")
     private String name;
 
@@ -35,17 +35,20 @@ public class Stuck {
     @ColumnInfo(name="sBoolFields")
     private String boolFields;
 
+    public Profile getProfile() {
+        return new Profile(getBoolFields());
+    }
 
     public String getBoolFields() {return boolFields;}
 
     public void setBoolFields(String boolFields) {this.boolFields = boolFields;}
 
     /**
-    Constructor to manually build a <code>Stuck</code>.
-     * @param name      A name used to retrieve the {@code Stuck}.
+    Constructor to manually build a <code>Stueck</code>.
+     * @param name      A name used to retrieve the {@code Stueck}.
      * @param boolFields   A string with 1s and 0s representing boolean values
      */
-    public Stuck(String name, String boolFields) {
+    public Stueck(String name, String boolFields) {
         this.id = 0;
         this.name = name;
         this.updateDay = "";
@@ -53,26 +56,26 @@ public class Stuck {
     }
 
     /**
-     * This method allows to fill an existing Stuck with user-provided values
-     * @param userProvidedStuck  A <code>Stuck</code> object containing the fields to copy
+     * This method allows to fill an existing Stueck with user-provided values
+     * @param userProvidedStueck  A <code>Stueck</code> object containing the fields to copy
      */
-    public void setUserProvidedFields(@NonNull Stuck userProvidedStuck) {
-        this.name = userProvidedStuck.name;
-        this.boolFields = userProvidedStuck.boolFields;
+    public void setUserProvidedFields(@NonNull Stueck userProvidedStueck) {
+        this.name = userProvidedStueck.name;
+        this.boolFields = userProvidedStueck.boolFields;
     }
 
     /**
-     * @return  The database Id of the <code>Stuck</code> object
+     * @return  The database Id of the <code>Stueck</code> object
      */
     public int getId() {return this.id;}
 
     /**
-     * @return  The name of the <code>Stuck</code>
+     * @return  The name of the <code>Stueck</code>
      */
     public String getName() {return this.name;}
 
     /**
-     * @return  The day the <code>Stuck</code> was last updated, in string format dd-MM-yyyy
+     * @return  The day the <code>Stueck</code> was last updated, in string format dd-MM-yyyy
      */
     public String getUpdateDay() {return this.updateDay;}
 

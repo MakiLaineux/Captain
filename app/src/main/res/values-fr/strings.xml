@@ -60,9 +60,9 @@
     <string name="txt_checkbox_field2">Booléen 2</string>
     <string name="txt_checkbox_field3">Booléen 3</string>
     <string name="txt_checkbox_field4">Booléen 4</string>
-    <string name="stuckname">stuckname</string>
-    <string name="stuckid">stuckId</string>
-    <string name="ct1">input stuck</string>
+    <string name="stueckname">stueckname</string>
+    <string name="stueckid">stueckId</string>
+    <string name="ct1">input stueck</string>
     <string name="ct2">kbox fingerprint one</string>
     <string name="ct3">kbox field two</string>
     <string name="ct4">kbox field three</string>
@@ -93,5 +93,10 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="profile">Profilage</string>
     <string name="list">Liste</string>
+    <string name="err_invalid_bools">invalid profile</string>
+    <string name="menu_profile">Profiling</string>
+    <string name="hello_nb_in_profile">nbinprofile</string>
+    <string name="hello_next">Next</string>
+    <string name="next">Next</string>
 
 </resources>

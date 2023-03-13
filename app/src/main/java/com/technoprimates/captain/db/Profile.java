@@ -30,13 +30,9 @@ public class Profile {
 
     public static final String TAG = "JC PROFILE";
 
-    /**
-     * Used as a prefix to store in SharedPreferences a set of booleans representing the current profile
-     */
-    public static final String PROFILE_BOOL = "ProfileBool";
 
     /**
-     * The total number of specific usages in the profile
+     * The total number of booleans in the profile
      */
     public static final int NB_CHECKBOX = 13;
 
@@ -52,23 +48,65 @@ public class Profile {
     private static final int NB_CHECKBOX_CRITERIA = 7;
 
     /* A profile object is essentially defined by this array of booleans */
-    private boolean[] mFlag = new boolean[NB_CHECKBOX];
+    private final boolean[] mFlag = new boolean[NB_CHECKBOX];
 
     /**
-     * Default constructor, no parameters, all usages are allowed
+     * Default constructor, builds a default Profile with all usages allowed
      */
     public Profile(){
-        for (int i = 0; i < NB_CHECKBOX; i++)
-            this.mFlag[i] = true;
+        for (int i = 0; i < NB_CHECKBOX; i++) this.mFlag[i] = true;
     }
 
     /**
-     * Constructor setting allowed usages using values passed in a array
-     * @param boolArray an array of NB_CHECKBOX booleans, pass "true" to allow each usage
+     * Constructor from a String.
+     * If the String does not define a valid Profile, the default Profile is built
      */
-    public Profile(boolean[] boolArray){
-        this.mFlag = boolArray;
+    public Profile(String stringProfile){
+        this(); // initialize to default Profile
+        // if the string is valid, set the booleans
+        if ((stringProfile != null)
+                && (stringProfile.length() == NB_CHECKBOX)
+                && (isValidProfileString(stringProfile))) {
+            for (int i = 0; i < NB_CHECKBOX; i++) this.mFlag[i] = (stringProfile.charAt(i) == 'X');
+        }
     }
+
+
+    /**
+     * Static method checking if a String defines a valid Profile
+     * @param stringProfile The String to check
+     * @return true if it defines a valid Profile
+     */
+    public static boolean isValidProfileString(String stringProfile) {
+        boolean[] flags = new boolean[NB_CHECKBOX];
+
+
+        // split the string into a boolean array
+        for (int i = 0; i < NB_CHECKBOX; i++)
+            flags[i] = (stringProfile.charAt(i) == 'X');
+
+        // check the booleans
+        // at least one nature must be true
+        int j=0; // loop index on all booleans
+        boolean bValid = false;
+        for (int i =0 ; i < NB_CHECKBOX_NATURE ; i++)
+            if (flags[j++]) bValid = true;
+        if (!bValid) return false;
+
+        // at least one style must be true
+        bValid = false;
+        for (int i =0 ; i < NB_CHECKBOX_STYLE ; i++)
+            if (flags[j++]) bValid = true;
+        if (!bValid) return false;
+
+        // at least one criteria must be true
+        bValid = false;
+        for (int i =0 ; i < NB_CHECKBOX_CRITERIA ; i++)
+            if (flags[j++]) bValid = true;
+        return bValid;
+    }
+
+
 
     /**
      * Returns a string of fixed length. Each char represent a boolean member of the object.
@@ -96,46 +134,13 @@ public class Profile {
     public boolean isEnabled(int i){return mFlag[i];}
 
     /**
-     * Updates a usage
-     * @param i number of the specific usage condition to set
-     * @param b true if this specific usage is allowed
-     */
-    public void setEnabled(int i, boolean b){mFlag[i]=b;}
-
-    /**
      * Set a Profile's content by updating all its possible usages.
      * @param s a string of length NB_CHECKBOX whose chars represent each a usage.
      *          The char is 'X' if the usage is allowed, ' ' otherwise.
-     *          If the length of the argument differs from NB_CHECKBOX, a
-     *          ProfileFormatException is thrown
      */
-    void feedFromString (String s) throws ProfileFormatException{
-            if ((s == null) || (s.length() != NB_CHECKBOX)) {
-                throw new ProfileFormatException();
-            }
-            for (int i = 0; i < NB_CHECKBOX; i++)
-                this.mFlag[i] = (s.charAt(i) == 'X');
-    }
-
-    /**
-     * Reset the profile, all usages are set to "allowed"
-     */
-    public void clear () {
+    public void feedFromString (String s) {
         for (int i = 0; i < NB_CHECKBOX; i++)
-            this.mFlag[i] = true;
-    }
-
-    /**
-     * Read the user preferences for the profile, and copy them into the current Profile object.
-     * The user preferences are stored in SharedPreferences
-     * @param context a context to access the SharedPreferences
-     */
-    public void feedFromPreferences(Context context){
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        for (int i = 0; i<Profile.NB_CHECKBOX ; i++) {
-            String prefName = PROFILE_BOOL + i;
-            mFlag[i] = sharedPref.getBoolean(prefName, true);
-        }
+            this.mFlag[i] = (s.charAt(i) == 'X');
     }
 
 

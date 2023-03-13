@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -23,21 +24,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.technoprimates.captain.StuckViewModel;
+import com.technoprimates.captain.StueckViewModel;
 import com.technoprimates.captain.R;
 import com.technoprimates.captain.databinding.FragmentListBinding;
-import com.technoprimates.captain.db.Stuck;
+import com.technoprimates.captain.db.Stueck;
 
-public class ListFragment extends Fragment implements StuckListAdapter.StuckActionListener {
+import java.util.List;
+
+public class ListFragment extends Fragment implements StueckListAdapter.StueckActionListener {
 
     // ViewModel scoped to the Activity
-    private StuckViewModel mViewModel;
+    private StueckViewModel mViewModel;
 
     // binding
     private FragmentListBinding binding;
 
     // Adapter for the RecyclerView
-    private StuckListAdapter adapter;
+    private StueckListAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +54,12 @@ public class ListFragment extends Fragment implements StuckListAdapter.StuckActi
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.action_profile) {
+                    // navigate to editFragment
+                    NavHostFragment.findNavController(ListFragment.this)
+                            .navigate(R.id.action_ListFragment_to_ProfileFragment);
+                    return true;
+                }
                 if (menuItem.getItemId() == R.id.action_settings) {
                     Toast.makeText(getActivity(), getString(R.string.toast_menu_settings), Toast.LENGTH_LONG).show();
                     return true;
@@ -75,20 +84,20 @@ public class ListFragment extends Fragment implements StuckListAdapter.StuckActi
         super.onViewCreated(view, savedInstanceState);
 
         // Creates the ViewModel instance
-        mViewModel = new ViewModelProvider(requireActivity()).get(StuckViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(StueckViewModel.class);
 
-        // Floating action button for adding a new Stuck item
+        // Floating action button for adding a new Stueck item
         binding.fab.setOnClickListener(view1 -> {
-            // Set in the ViewModel the action to process, no db-existing Stuck required in this case
-            mViewModel.selectActionToProcess(Stuck.MODE_INSERT);
-            mViewModel.selectStuckToProcess(null);
+            // Set in the ViewModel the action to process, no db-existing Stueck required in this case
+            mViewModel.selectActionToProcess(Stueck.MODE_INSERT);
+            mViewModel.selectStueckToProcess(null);
 
             // navigate to editFragment
             NavHostFragment.findNavController(ListFragment.this)
                     .navigate(R.id.action_ListFragment_to_EditFragment);
         });
-        observerSetup();
         recyclerSetup();
+        observerSetup();
     }
 
     @Override
@@ -97,19 +106,11 @@ public class ListFragment extends Fragment implements StuckListAdapter.StuckActi
         binding = null;
     }
 
-    // Observe the LiveData List of Codes
-    private void observerSetup() {
-        mViewModel.getAllstucks().observe(getViewLifecycleOwner(),
-                stucks -> {
-                    adapter.setStuckList(stucks); // update RV
-                });
-    }
-
     //Sets the RecyclerView
     private void recyclerSetup() {
-        adapter = new StuckListAdapter(R.layout.stuck_item, this);
-        binding.stuckRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.stuckRecycler.setAdapter(adapter);
+        adapter = new StueckListAdapter(R.layout.stueck_item, this, mViewModel);
+        binding.stueckRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.stueckRecycler.setAdapter(adapter);
 
         // swipe detection
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
@@ -120,50 +121,64 @@ public class ListFragment extends Fragment implements StuckListAdapter.StuckActi
 
             @Override //swipe
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                onDeleteStuckRequest(viewHolder.getBindingAdapterPosition());
+                onDeleteStueckRequest(viewHolder.getBindingAdapterPosition());
             }
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(binding.stuckRecycler);
+        itemTouchHelper.attachToRecyclerView(binding.stueckRecycler);
     }
+
+
+    // Observe the LiveData List of all stücks and update adapter when this list is modified
+    private void observerSetup() {
+        mViewModel.getAllStuecksList().observe(getViewLifecycleOwner(),
+                new Observer<List<Stueck>>() {
+                    @Override
+                    public void onChanged(List<Stueck> allStuecks) {
+                        // update viewmodel's profiled stücks list and update RV
+                        adapter.updateProfiledStuecksList();
+                    }
+                });
+    }
+
 
     /**
      * {@inheritDoc}
      * <p>This triggers a navigation to the Visualization Fragment.
      */
     @Override
-    public void onStuckClicked(Stuck stuck) {
+    public void onStueckClicked(Stueck stueck) {
 
-        // Set in the ViewModel the action to process, and the Stuck to process
-        mViewModel.selectActionToProcess(Stuck.MODE_UPDATE);
-        mViewModel.selectStuckToProcess(stuck);
+        // Set in the ViewModel the action to process, and the Stueck to process
+        mViewModel.selectActionToProcess(Stueck.MODE_UPDATE);
+        mViewModel.selectStueckToProcess(stueck);
 
         NavHostFragment.findNavController(ListFragment.this)
                 .navigate(R.id.action_ListFragment_to_EditFragment);
     }
 
 
-    public void onDeleteStuckRequest(int pos) {
+    public void onDeleteStueckRequest(int pos) {
 
-        // delete selected Stuck
-        Stuck stuck = adapter.getStuckAtPos(pos);
-        if (stuck == null) return;
+        // delete selected Stueck
+        Stueck stueck = adapter.getStueckAtPos(pos);
+        if (stueck == null) return;
 
-        // Set in the ViewModel the action to process, and the Stuck to process
-        mViewModel.selectActionToProcess(Stuck.MODE_DELETE);
-        mViewModel.selectStuckToProcess(stuck);
-        mViewModel.deleteStuck();
+        // Set in the ViewModel the action to process, and the Stueck to process
+        mViewModel.selectActionToProcess(Stueck.MODE_DELETE);
+        mViewModel.selectStueckToProcess(stueck);
+        mViewModel.deleteStueck();
 
         // show snackbar with undo button
-        Snackbar snackbar = Snackbar.make(binding.stuckRecycler, "Stuck deleted at pos : "+pos, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(binding.stueckRecycler, "Stueck deleted at pos : "+pos, Snackbar.LENGTH_LONG);
         //
         snackbar.setAction("UNDO", view -> {
-            // Set in the ViewModel the action to process, and the Stuck to process
-            mViewModel.selectActionToProcess(Stuck.MODE_INSERT);
-            mViewModel.selectStuckToProcess(stuck);
-            // Re-insert the Stuck
-            mViewModel.reInsertStuck();
+            // Set in the ViewModel the action to process, and the Stueck to process
+            mViewModel.selectActionToProcess(Stueck.MODE_INSERT);
+            mViewModel.selectStueckToProcess(stueck);
+            // Re-insert the Stueck
+            mViewModel.reInsertStueck();
         });
         snackbar.show();
     }
@@ -214,7 +229,7 @@ public class ListFragment extends Fragment implements StuckListAdapter.StuckActi
              */
             @Override
             public void onCancel() {
-                Snackbar snackbar = Snackbar.make(binding.stuckRecycler, "Canceled via signal", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(binding.stueckRecycler, "Canceled via signal", Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
         });
