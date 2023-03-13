@@ -37,15 +37,13 @@ public class StueckViewModel extends AndroidViewModel {
     // A LiveData list of all Stücks, to be observed to update the RecylerView
     private final LiveData<List<Stueck>> allStuecksList;
 
-    // A list of all stucks
-
     // A list of Stücks matching the current Profile,
-    // to be displayed in the recyclerview
-    // and to be used when a profiled Stück is requested
+    // This is the list displayed in the recyclerview
+    // and used when requesting profiled Stücks
     private final List<Stueck> profiledStuecksList;
 
     // TODO
-    private List<String> stockStrings;
+    private final List<String> nextNames = new ArrayList<>();
 
 
     // The nature of the next action to be processed
@@ -55,7 +53,7 @@ public class StueckViewModel extends AndroidViewModel {
     private Stueck currentStueck;
 
     // Current profile for stuecks
-    private Profile currentProfile = new Profile();
+    private final Profile currentProfile;
 
     /**
      * Constructor of the ViewModel managing <code>Stueck</code> objects.
@@ -103,31 +101,21 @@ public class StueckViewModel extends AndroidViewModel {
         }
     }
 
-    /**
-     * Get the current profile
-     * @return  A profile stored in a String
-     */
-    public Profile getProfile() {
-        return currentProfile;
-    }
-
-
-    /**
-     * Get a LiveData list of all <code>Stueck</code> objects in database matching the current Profile
-     * <p>The return value is to be observed to update the RecyclerView </p>
-     * @return  The LiveData list of Stuecks to display
-     */
-    public LiveData<List<Stueck>> getAllStuecksList() {return allStuecksList;}
-
 
     /*
-    Build the profiled Stuecks list from the livedata list of all stücks, selecting or not the items according to current Profile
+    Rebuild the profiled Stuecks list from the livedata list of all stücks, selecting items matching current Profile
+    And rebuild the list of next stüecks names
+    Call this when Profile is changed or when livedata changes
      */
     public void updateProfiledStuecksList() {
         profiledStuecksList.clear();
+        nextNames.clear();
+        // livedata list must have been set
+        assert (allStuecksList.getValue() != null);
         for (int i=0; i < allStuecksList.getValue().size(); i++) {
             if (getProfile().matches(allStuecksList.getValue().get(i).getProfile())) {
                 profiledStuecksList.add(allStuecksList.getValue().get(i));
+                nextNames.add(allStuecksList.getValue().get(i).getName());
             }
         }
     }
@@ -174,33 +162,6 @@ public class StueckViewModel extends AndroidViewModel {
         }
         currentStueck.setUserProvidedFields(stueck);
     }
-
-    /**
-     * Get db-existing Stueck to process next.
-     * <p>The Stueck to process must have been set previously with the <code>setNextCodeAction</code> method</p>
-     * @return  A <code>Stueck</code> object already existing in the database, or null if no Stueck object was previously set.
-     */
-    public Stueck getStueckToProcess() {
-        return currentStueck;
-    }
-
-
-    /**
-     * Get the next action to be performed.
-     * <p>Possible values are :</p>
-     * <li>Stueck.MODE_VISU</li>
-     * <li>Stueck.MODE_UPDATE</li>
-     * <li>Stueck.MODE_INSERT</li>
-     * <li>Stueck.MODE_DELETE</li>
-     *
-     * @return  The action to be performed
-     */
-    public int getActionMode() {
-        return actionMode;
-    }
-
-
-    public List<Stueck> getProfiledStuecksList() {return profiledStuecksList;}
 
     /**
      * Update a Stueck.
@@ -281,4 +242,76 @@ public class StueckViewModel extends AndroidViewModel {
         }
         return false; // no match found
     }
+
+    public List<String> getNextNames() {
+        return nextNames;
+    }
+
+    public String popNextName(int pos) {
+        try {
+            return (nextNames.remove(pos));
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "pop String : No string at this pos");
+            return null;
+        } catch (Exception e) {
+            Log.e(TAG, "pop String : unexpected exception");
+            return null;
+        }
+    }
+
+    public int nbNextNames() {
+        return nextNames.size();
+    }
+
+    public void rebuildNextnames() {
+        nextNames.clear();
+        for (int i=0; i < profiledStuecksList.size(); i++) {
+                nextNames.add(profiledStuecksList.get(i).getName());
+            }
+    }
+
+    /**
+     * Get the current profile
+     * @return  A profile stored in a String
+     */
+    public Profile getProfile() {
+        return currentProfile;
+    }
+
+
+    /**
+     * Get a LiveData list of all <code>Stueck</code> objects in database matching the current Profile
+     * <p>The return value is to be observed to update the RecyclerView </p>
+     * @return  The LiveData list of Stuecks to display
+     */
+    public LiveData<List<Stueck>> getAllStuecksList() {return allStuecksList;}
+
+
+    /**
+     * Get the next action to be performed.
+     * <p>Possible values are :</p>
+     * <li>Stueck.MODE_VISU</li>
+     * <li>Stueck.MODE_UPDATE</li>
+     * <li>Stueck.MODE_INSERT</li>
+     * <li>Stueck.MODE_DELETE</li>
+     *
+     * @return  The action to be performed
+     */
+    public int getActionMode() {
+        return actionMode;
+    }
+
+    /**
+     * Get db-existing Stueck to process next.
+     * <p>The Stueck to process must have been set previously with the <code>setNextCodeAction</code> method</p>
+     * @return  A <code>Stueck</code> object already existing in the database, or null if no Stueck object was previously set.
+     */
+    public Stueck getStueckToProcess() {
+        return currentStueck;
+    }
+
+    public List<Stueck> getProfiledStuecksList() {return profiledStuecksList;}
+
+
+
 }

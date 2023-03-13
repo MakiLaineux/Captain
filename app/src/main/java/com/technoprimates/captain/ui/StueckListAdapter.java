@@ -1,6 +1,5 @@
 package com.technoprimates.captain.ui;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,22 +38,12 @@ public class StueckListAdapter extends RecyclerView.Adapter<StueckViewHolder> {
     // An implementation of the StueckActionListener interface to call back when an item is clicked
     private final StueckActionListener mListener;
 
-    // the viewmodel
-    private final StueckViewModel mStueckViewModel;
 
+    // constructor with viewmodel to get a reference to the profiled stück list
     public StueckListAdapter(int layoutId, StueckActionListener listener, StueckViewModel stueckViewModel) {
         mStueckItemLayout = layoutId;
         this.mListener = listener;
-        mStueckViewModel = stueckViewModel;
-        mProfiledStuecksList = mStueckViewModel.getProfiledStuecksList();
-    }
-
-    // update the list of stücks matching the current Profile
-    // call this either when Profile is changed or when livedata changes
-    @SuppressLint("NotifyDataSetChanged")
-    public void updateProfiledStuecksList() {
-        mStueckViewModel.updateProfiledStuecksList();
-        notifyDataSetChanged();
+        mProfiledStuecksList = stueckViewModel.getProfiledStuecksList();
     }
 
     @Nullable

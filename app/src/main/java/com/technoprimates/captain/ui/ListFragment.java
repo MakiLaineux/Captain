@@ -1,5 +1,6 @@
 package com.technoprimates.captain.ui;
 
+import android.annotation.SuppressLint;
 import android.hardware.biometrics.BiometricPrompt;
 import android.hardware.biometrics.BiometricPrompt.AuthenticationCallback;
 import android.os.Bundle;
@@ -16,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -34,7 +34,7 @@ import java.util.List;
 public class ListFragment extends Fragment implements StueckListAdapter.StueckActionListener {
 
     // ViewModel scoped to the Activity
-    private StueckViewModel mViewModel;
+    private StueckViewModel mStueckViewModel;
 
     // binding
     private FragmentListBinding binding;
@@ -84,13 +84,13 @@ public class ListFragment extends Fragment implements StueckListAdapter.StueckAc
         super.onViewCreated(view, savedInstanceState);
 
         // Creates the ViewModel instance
-        mViewModel = new ViewModelProvider(requireActivity()).get(StueckViewModel.class);
+        mStueckViewModel = new ViewModelProvider(requireActivity()).get(StueckViewModel.class);
 
         // Floating action button for adding a new Stueck item
         binding.fab.setOnClickListener(view1 -> {
             // Set in the ViewModel the action to process, no db-existing Stueck required in this case
-            mViewModel.selectActionToProcess(Stueck.MODE_INSERT);
-            mViewModel.selectStueckToProcess(null);
+            mStueckViewModel.selectActionToProcess(Stueck.MODE_INSERT);
+            mStueckViewModel.selectStueckToProcess(null);
 
             // navigate to editFragment
             NavHostFragment.findNavController(ListFragment.this)
@@ -108,7 +108,7 @@ public class ListFragment extends Fragment implements StueckListAdapter.StueckAc
 
     //Sets the RecyclerView
     private void recyclerSetup() {
-        adapter = new StueckListAdapter(R.layout.stueck_item, this, mViewModel);
+        adapter = new StueckListAdapter(R.layout.stueck_item, this, mStueckViewModel);
         binding.stueckRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.stueckRecycler.setAdapter(adapter);
 
@@ -130,15 +130,16 @@ public class ListFragment extends Fragment implements StueckListAdapter.StueckAc
     }
 
 
-    // Observe the LiveData List of all stücks and update adapter when this list is modified
+    /*  Observe the LiveData List of all stücks
+     Update viewmodel list of profiled stücks when this list is modified and refresh RV
+     */
+    @SuppressLint("NotifyDataSetChanged")
     private void observerSetup() {
-        mViewModel.getAllStuecksList().observe(getViewLifecycleOwner(),
-                new Observer<List<Stueck>>() {
-                    @Override
-                    public void onChanged(List<Stueck> allStuecks) {
-                        // update viewmodel's profiled stücks list and update RV
-                        adapter.updateProfiledStuecksList();
-                    }
+        mStueckViewModel.getAllStuecksList().observe(getViewLifecycleOwner(),
+                allStuecks -> {
+                    // update viewmodel's profiled stücks list and update RV
+                    mStueckViewModel.updateProfiledStuecksList();
+                    adapter.notifyDataSetChanged();
                 });
     }
 
@@ -151,8 +152,8 @@ public class ListFragment extends Fragment implements StueckListAdapter.StueckAc
     public void onStueckClicked(Stueck stueck) {
 
         // Set in the ViewModel the action to process, and the Stueck to process
-        mViewModel.selectActionToProcess(Stueck.MODE_UPDATE);
-        mViewModel.selectStueckToProcess(stueck);
+        mStueckViewModel.selectActionToProcess(Stueck.MODE_UPDATE);
+        mStueckViewModel.selectStueckToProcess(stueck);
 
         NavHostFragment.findNavController(ListFragment.this)
                 .navigate(R.id.action_ListFragment_to_EditFragment);
@@ -166,75 +167,20 @@ public class ListFragment extends Fragment implements StueckListAdapter.StueckAc
         if (stueck == null) return;
 
         // Set in the ViewModel the action to process, and the Stueck to process
-        mViewModel.selectActionToProcess(Stueck.MODE_DELETE);
-        mViewModel.selectStueckToProcess(stueck);
-        mViewModel.deleteStueck();
+        mStueckViewModel.selectActionToProcess(Stueck.MODE_DELETE);
+        mStueckViewModel.selectStueckToProcess(stueck);
+        mStueckViewModel.deleteStueck();
 
         // show snackbar with undo button
         Snackbar snackbar = Snackbar.make(binding.stueckRecycler, "Stueck deleted at pos : "+pos, Snackbar.LENGTH_LONG);
         //
         snackbar.setAction("UNDO", view -> {
             // Set in the ViewModel the action to process, and the Stueck to process
-            mViewModel.selectActionToProcess(Stueck.MODE_INSERT);
-            mViewModel.selectStueckToProcess(stueck);
+            mStueckViewModel.selectActionToProcess(Stueck.MODE_INSERT);
+            mStueckViewModel.selectStueckToProcess(stueck);
             // Re-insert the Stueck
-            mViewModel.reInsertStueck();
+            mStueckViewModel.reInsertStueck();
         });
         snackbar.show();
     }
-
-    /**
-     * Defines the methods to handle the authentication events
-     */
-    private AuthenticationCallback getAuthenticationCallback() {
-        return new AuthenticationCallback() {
-            @Override
-            public void onAuthenticationError(int errorCode, CharSequence errString) {
-                Toast.makeText(getActivity(), getString(R.string.toast_authentication_failed), Toast.LENGTH_LONG).show();
-                super.onAuthenticationError(errorCode, errString);
-            }
-
-            @Override
-            public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
-                super.onAuthenticationHelp(helpCode, helpString);
-            }
-
-            @Override
-            public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
-                Toast.makeText(getActivity(), getString(R.string.toast_authentication_success), Toast.LENGTH_LONG).show();
-                super.onAuthenticationSucceeded(result);
-
-                // Navigate to the visualization fragment
-                NavHostFragment.findNavController(ListFragment.this)
-                        .navigate(R.id.action_ListFragment_to_EditFragment);
-            }
-
-            @Override
-            public void onAuthenticationFailed() {
-                Toast.makeText(getActivity(), getString(R.string.toast_authentication_failed), Toast.LENGTH_LONG).show();
-                super.onAuthenticationFailed();
-            }
-        };
-    }
-
-    /**
-     * Defines the CancellationSignal object
-     * Call cancel() on this object to cancel the authentication attempt
-     */
-    private CancellationSignal getCancellationSignal() {
-        CancellationSignal cancellationSignal = new CancellationSignal();
-        cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
-            /**
-             * Callback launched after cancellation
-             */
-            @Override
-            public void onCancel() {
-                Snackbar snackbar = Snackbar.make(binding.stueckRecycler, "Canceled via signal", Snackbar.LENGTH_LONG);
-                snackbar.show();
-            }
-        });
-        return cancellationSignal;
-    }
-
-
 }

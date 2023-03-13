@@ -85,7 +85,7 @@ public class EditFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // find text area and checkboxes in the layout
-        mStueckName = (TextInputLayout) getView().findViewById(R.id.stueck_name);
+        mStueckName = getView().findViewById(R.id.stueck_name);
         for (int i = 0; i<Profile.NB_CHECKBOX ; i++) {
             String boxName = Profile.CHECKBOXNAME + i;
             int boxId = getResources().getIdentifier(boxName, "id", requireActivity().getPackageName());

@@ -7,23 +7,22 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.technoprimates.captain.R;
 import com.technoprimates.captain.StueckViewModel;
 import com.technoprimates.captain.databinding.FragmentHomeBinding;
-import com.technoprimates.captain.db.Stueck;
 
 import java.util.List;
+import java.util.Random;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
 
     // ViewModel scoped to the Activity
-    private StueckViewModel mViewModel;
+    private StueckViewModel mStueckViewModel;
 
 
     @Override
@@ -41,20 +40,19 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Creates the ViewModel instance
-        mViewModel = new ViewModelProvider(requireActivity()).get(StueckViewModel.class);
+        mStueckViewModel = new ViewModelProvider(requireActivity()).get(StueckViewModel.class);
 
-        // sets observer (that do nothing for now) to ensure livedata is initialized
-        mViewModel.getAllStuecksList().observe(getViewLifecycleOwner(),
-                new Observer<List<Stueck>>() {
-                    @Override
-                    public void onChanged(List<Stueck> allStuecks) {
-                        // do nothing
-                    }
+        binding.textviewSecond.setText(String.valueOf(mStueckViewModel.nbNextNames()));
+
+        // observe livedata and update the profiled stücks list
+        mStueckViewModel.getAllStuecksList().observe(getViewLifecycleOwner(),
+                allStuecks -> {
+                    // update viewmodel's profiled stücks list
+                    mStueckViewModel.updateProfiledStuecksList();
+                    binding.textviewSecond.setText(String.valueOf(mStueckViewModel.nbNextNames()));
                 });
 
-        binding.textviewFirst.setText(mViewModel.getProfile().toString());
-        if (mViewModel.getProfiledStuecksList() != null)
-            binding.textviewSecond.setText(String.valueOf(mViewModel.getProfiledStuecksList().size()));
+        binding.textviewFirst.setText(mStueckViewModel.getProfile().toString());
 
         binding.buttonProfile.setOnClickListener(view1 -> NavHostFragment.findNavController(HomeFragment.this)
                 .navigate(R.id.action_HomeFragment_to_ProfileFragment));
@@ -62,12 +60,32 @@ public class HomeFragment extends Fragment {
         binding.buttonList.setOnClickListener(view2 -> NavHostFragment.findNavController(HomeFragment.this)
                 .navigate(R.id.action_HomeFragment_to_ListFragment));
 
-        binding.buttonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view2) {
-                binding.textviewThird.setText("A");
-           }
-        });
+        // on click : pop name and display it
+        binding.buttonNext.setOnClickListener(view2 -> displayName());
+
+        // reset : rebuild nextnames list
+        binding.buttonReset.setOnClickListener(view3 -> rebuildNames());
+    }
+
+    // Pop a name from list and display it
+    private void displayName() {
+        int nbOfNames = mStueckViewModel.nbNextNames();
+        if ( nbOfNames== 0) {
+            binding.textviewThird.setText("No name to display");
+        } else {
+            // get random position in list
+            Random r = new Random();
+            int i = r.nextInt(nbOfNames);
+            binding.textviewThird.setText(mStueckViewModel.popNextName(i));
+            binding.textviewSecond.setText(String.valueOf(mStueckViewModel.nbNextNames()));
+        }
+    }
+
+    // Pop a name from list and display it
+    private void rebuildNames() {
+        mStueckViewModel.rebuildNextnames();
+        binding.textviewSecond.setText(String.valueOf(mStueckViewModel.nbNextNames()));
+        binding.textviewThird.setText("");
     }
 
     @Override

@@ -1,11 +1,8 @@
 package com.technoprimates.captain.db;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 
 /**
  * A class defining the possible usages of a statement
