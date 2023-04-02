@@ -16,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.technoprimates.captain.databinding.ActivityMainBinding;
+import com.technoprimates.captain.db.Utils;
 
 import android.widget.Toast;
 

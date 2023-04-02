@@ -22,4 +22,9 @@
         android:orderInCategory="400"
         android:title="@string/menu_about"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_load"
+        android:orderInCategory="500"
+        android:title="@string/menu_load"
+        app:showAsAction="never" />
 </menu>

@@ -99,5 +99,6 @@
     <string name="hello_next">Next</string>
     <string name="next">Next</string>
     <string name="reset">reset</string>
+    <string name="menu_load">Load</string>
 
 </resources>

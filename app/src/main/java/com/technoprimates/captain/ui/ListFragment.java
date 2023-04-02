@@ -28,6 +28,7 @@ import com.technoprimates.captain.StueckViewModel;
 import com.technoprimates.captain.R;
 import com.technoprimates.captain.databinding.FragmentListBinding;
 import com.technoprimates.captain.db.Stueck;
+import com.technoprimates.captain.db.Utils;
 
 import java.util.List;
 
@@ -70,6 +71,10 @@ public class ListFragment extends Fragment implements StueckListAdapter.StueckAc
                 }
                 if (menuItem.getItemId() == R.id.action_about) {
                     Toast.makeText(getActivity(), getString(R.string.toast_menu_about), Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                if (menuItem.getItemId() == R.id.action_load) {
+                    Utils.loadAssets(requireContext(), mStueckViewModel);
                     return true;
                 }
                 return false;
